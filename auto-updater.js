@@ -7,6 +7,8 @@ const path = require('path')
 var state = 'checking'
 
 exports.initialize = function () {
+  if (process.mas) return
+
   autoUpdater.on('checking-for-update', function () {
     state = 'checking'
     exports.updateMenu()
@@ -37,6 +39,8 @@ exports.initialize = function () {
 }
 
 exports.updateMenu = function () {
+  if (process.mas) return
+
   var menu = Menu.getApplicationMenu()
   if (!menu) return
 
@@ -76,7 +80,7 @@ exports.removeShortcut = function (callback) {
 }
 
 function spawnUpdate (args, callback) {
-  var updateExe = path.resolve(process.execPath, '..', '..', 'Update.exe')
+  var updateExe = path.resolve(path.dirname(process.execPath), '..', 'Update.exe')
   var stdout = ''
   var spawned = null
 

@@ -8,6 +8,8 @@ const app = electron.app
 
 const debug = /--debug/.test(process.argv[2])
 
+if (process.mas) app.setName('Electron APIs')
+
 var mainWindow = null
 
 function initialize () {
@@ -20,8 +22,10 @@ function initialize () {
     var windowOptions = {
       width: 1080,
       minWidth: 680,
-      height: 840
+      height: 840,
+      title: app.getName()
     }
+
     if (process.platform === 'linux') {
       windowOptions.icon = path.join(__dirname, '/assets/app-icon/png/512.png')
     }
@@ -33,6 +37,7 @@ function initialize () {
     if (debug) {
       mainWindow.webContents.openDevTools()
       mainWindow.maximize()
+      require('devtron').install()
     }
 
     mainWindow.on('closed', function () {
@@ -66,6 +71,8 @@ function initialize () {
 // Returns true if the current version of the app should quit instead of
 // launching.
 function makeSingleInstance () {
+  if (process.mas) return false
+
   return app.makeSingleInstance(function () {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore()
